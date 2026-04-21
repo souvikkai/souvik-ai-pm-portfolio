@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformer Attention Visualizer · Souvik Kundu</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3e;
+    --accent: #7c6af7;
+    --accent2: #e8c06d;
+    --accent3: #5ecfb0;
+    --text: #e8e8f0;
+    --text-dim: #6e6e8a;
+    --hot: #e85d75;
+    --warm: #e8a15d;
+    --cool: #5da8e8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* Header */
+  header {
+    margin-bottom: 56px;
+    border-left: 3px solid var(--accent);
+    padding-left: 20px;
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  h1 em {
+    color: var(--accent2);
+    font-style: italic;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .byline {
+    margin-top: 16px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* Sentence display */
+  .sentence-section {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .sentence-tokens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .token-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    letter-spacing: 0.03em;
+  }
+
+  .token-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .token-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(124, 106, 247, 0.35);
+  }
+
+  .token-btn .idx {
+    position: absolute;
+    top: -8px;
+    right: -4px;
+    font-size: 9px;
+    color: var(--text-dim);
+    background: var(--bg);
+    padding: 1px 3px;
+  }
+
+  /* Main layout */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .main-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Heatmap */
+  .heatmap-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+  }
+
+  .heatmap-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .heatmap-title span {
+    color: var(--accent2);
+  }
+
+  .heatmap-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-dim);
+    padding: 4px 6px;
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  th.row-label {
+    text-align: right;
+    padding-right: 12px;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+
+  td {
+    width: 52px;
+    height: 46px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  td:hover { transform: scale(1.08); z-index: 10; }
+
+  td .cell-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+
+  td:hover .cell-inner {
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  td.highlighted .cell-inner {
+    border-color: var(--accent2);
+    box-shadow: 0 0 10px rgba(232, 192, 109, 0.3);
+  }
+
+  /* Color scale legend */
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .legend-bar {
+    flex: 1;
+    height: 6px;
+    background: linear-gradient(to right, #0a0a1a, #2a1a5e, #7c6af7, #e8c06d, #fff5d0);
+    border-radius: 3px;
+  }
+
+  /* Side panel */
+  .side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 22px;
+  }
+
+  .info-card h3 {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .selected-token {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--accent2);
+    margin-bottom: 16px;
+  }
+
+  .attention-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .attn-row {
+    display: grid;
+    grid-template-columns: 70px 1fr 44px;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .attn-token {
+    color: var(--text-dim);
+    text-align: right;
+  }
+
+  .attn-token.self { color: var(--accent3); }
+  .attn-token.top { color: var(--text); }
+
+  .attn-bar-wrap {
+    height: 6px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .attn-bar {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .attn-bar.top { background: var(--accent2); }
+  .attn-bar.self { background: var(--accent3); }
+
+  .attn-val {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: right;
+  }
+
+  /* Concept card */
+  .concept-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent3);
+    padding: 22px;
+  }
+
+  .concept-card h3 {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-bottom: 14px;
+  }
+
+  .concept-card p {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  .concept-card code {
+    background: var(--surface2);
+    padding: 2px 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent2);
+  }
+
+  /* Formula block */
+  .formula-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 22px;
+  }
+
+  .formula-card h3 {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .formula {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent2);
+    line-height: 2.2;
+    border-left: 2px solid var(--accent);
+    padding-left: 14px;
+  }
+
+  .formula .comment {
+    color: var(--text-dim);
+    font-size: 10px;
+  }
+
+  /* Infrastructure callout */
+  .infra-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--hot);
+    padding: 22px;
+    margin-top: 32px;
+  }
+
+  .infra-card h3 {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--hot);
+    margin-bottom: 12px;
+  }
+
+  .infra-card p {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 10px;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .stat {
+    background: var(--surface2);
+    padding: 12px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-size: 16px;
+    color: var(--accent2);
+    font-family: 'DM Serif Display', serif;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--text);
+    pointer-events: none;
+    z-index: 999;
+    display: none;
+    max-width: 220px;
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* Animations */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .container > * {
+    animation: fadeSlideIn 0.5s ease both;
+  }
+
+  .container > *:nth-child(2) { animation-delay: 0.08s; }
+  .container > *:nth-child(3) { animation-delay: 0.16s; }
+  .container > *:nth-child(4) { animation-delay: 0.24s; }
+</style>
+</head>
+<body>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div class="container">
+
+  <header>
+    <div class="tag">Portfolio Project P7 · AI PM Master Curriculum · Day 6</div>
+    <h1>Transformer <em>Attention</em><br>Visualizer</h1>
+    <p class="subtitle">Interactive visualization of the scaled dot-product attention mechanism. Click any token to inspect its attention distribution across the full context window.</p>
+    <div class="byline">Souvik Kundu · github.com/souvikkai · souvik-ai-pm-portfolio</div>
+  </header>
+
+  <!-- Sentence -->
+  <div class="sentence-section">
+    <div class="section-label">Input Sentence — Click a token to inspect its attention</div>
+    <div class="sentence-tokens" id="tokenBtns"></div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="main-grid">
+
+    <!-- Heatmap -->
+    <div>
+      <div class="heatmap-card">
+        <div class="heatmap-title">
+          Attention Matrix — <span id="heatmapLabel">all tokens</span>
+        </div>
+        <div class="heatmap-wrap">
+          <table id="heatmap"></table>
+        </div>
+        <div class="legend">
+          <span>low</span>
+          <div class="legend-bar"></div>
+          <span>high</span>
+        </div>
+      </div>
+
+      <!-- Infrastructure callout -->
+      <div class="infra-card">
+        <h3>⚡ Infrastructure Implication</h3>
+        <p>This 10×10 matrix represents attention for a 10-token sentence. Scale this to production:</p>
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-val">128K</div>
+            <div class="stat-label">GPT-4 context</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">16B</div>
+            <div class="stat-label">ops per layer</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">O(n²)</div>
+            <div class="stat-label">compute scaling</div>
+          </div>
+        </div>
+        <p style="margin-top:14px">KV cache stores K and V vectors for all previous tokens, eliminating recomputation on each new token. Memory cost grows <strong style="color:var(--accent2)">linearly</strong> with context — this is why 1M token windows require tens of GB of GPU memory per active session.</p>
+      </div>
+    </div>
+
+    <!-- Side panel -->
+    <div class="side-panel">
+
+      <!-- Attention breakdown -->
+      <div class="info-card">
+        <h3>Attention From Selected Token</h3>
+        <div class="selected-token" id="selectedTokenLabel">"she"</div>
+        <div class="attention-list" id="attentionList"></div>
+      </div>
+
+      <!-- Concept -->
+      <div class="concept-card">
+        <h3>Q · K · V Mechanism</h3>
+        <p>Every token generates three vectors from its embedding:<br><br>
+          <code>Q</code> — "what am I looking for?"<br>
+          <code>K</code> — "what do I contain?"<br>
+          <code>V</code> — "what do I pass forward?"<br><br>
+          Attention score = <code>Q·K / √d</code><br>
+          Output = softmax(scores) · V<br><br>
+          The <code>√d</code> scaling prevents dot products from growing large enough to saturate softmax — which would kill gradients during training.
+        </p>
+      </div>
+
+      <!-- Formula -->
+      <div class="formula-card">
+        <h3>Scaled Dot-Product Attention</h3>
+        <div class="formula">
+          Attention(Q,K,V) =<br>
+          &nbsp;softmax( Q·Kᵀ / √dₖ ) · V<br>
+          <span class="comment"><br>// dₖ = head dimension (d/h)<br>// h = number of heads<br>// Repeated h times in parallel<br>// → Multi-Head Attention</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer class="container" style="padding-top:24px; padding-bottom:40px; margin-top:0">
+  <span>Souvik Kundu · AI PM Portfolio · Day 6: Transformer Architecture</span>
+  <span>Built with scaled dot-product attention computed from scratch · <a href="https://github.com/souvikkai/souvik-ai-pm-portfolio">github.com/souvikkai</a></span>
+</footer>
+
+<script>
+const DATA = {"tokens":["the","lawyer","defended","the","client","because","she","believed","in","justice"],"matrix":[[0.111,0.089,0.089,0.123,0.107,0.119,0.086,0.085,0.100,0.091],[0.135,0.056,0.105,0.148,0.058,0.117,0.058,0.076,0.114,0.133],[0.118,0.072,0.123,0.121,0.070,0.108,0.082,0.092,0.110,0.104],[0.096,0.123,0.113,0.093,0.109,0.101,0.085,0.095,0.091,0.094],[0.109,0.120,0.091,0.105,0.104,0.099,0.080,0.090,0.095,0.107],[0.095,0.111,0.115,0.104,0.104,0.109,0.094,0.089,0.087,0.092],[0.083,0.127,0.077,0.070,0.096,0.073,0.119,0.141,0.104,0.111],[0.090,0.096,0.114,0.101,0.072,0.093,0.090,0.105,0.126,0.113],[0.085,0.126,0.101,0.084,0.101,0.088,0.118,0.103,0.098,0.096],[0.124,0.051,0.102,0.157,0.079,0.138,0.092,0.076,0.107,0.074]]};
+
+const tokens = DATA.tokens;
+const matrix = DATA.matrix;
+const n = tokens.length;
+let selectedRow = 6; // "she" by default
+
+// Color interpolation: dark → purple → gold → light gold
+function weightToColor(w) {
+  // Normalize: typical range is ~0.07 to ~0.16
+  const lo = 0.06, hi = 0.18;
+  const t = Math.max(0, Math.min(1, (w - lo) / (hi - lo)));
+
+  // Three-stop gradient
+  if (t < 0.5) {
+    const u = t * 2;
+    const r = Math.round(10 + u * (124 - 10));
+    const g = Math.round(10 + u * (106 - 10));
+    const b = Math.round(15 + u * (247 - 15));
+    return `rgb(${r},${g},${b})`;
+  } else {
+    const u = (t - 0.5) * 2;
+    const r = Math.round(124 + u * (232 - 124));
+    const g = Math.round(106 + u * (192 - 106));
+    const b = Math.round(247 + u * (109 - 247));
+    return `rgb(${r},${g},${b})`;
+  }
+}
+
+function textColor(w) {
+  const lo = 0.06, hi = 0.18;
+  const t = (w - lo) / (hi - lo);
+  return t > 0.65 ? '#0a0a0f' : '#e8e8f0';
+}
+
+// Build token buttons
+const btnContainer = document.getElementById('tokenBtns');
+tokens.forEach((tok, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'token-btn' + (i === selectedRow ? ' active' : '');
+  btn.innerHTML = tok + `<span class="idx">${i}</span>`;
+  btn.addEventListener('click', () => selectToken(i));
+  btnContainer.appendChild(btn);
+});
+
+// Build heatmap
+function buildHeatmap() {
+  const table = document.getElementById('heatmap');
+  table.innerHTML = '';
+
+  // Header row
+  const thead = document.createElement('tr');
+  const empty = document.createElement('th');
+  empty.className = 'row-label';
+  empty.textContent = 'FROM → TO';
+  thead.appendChild(empty);
+  tokens.forEach(tok => {
+    const th = document.createElement('th');
+    th.textContent = tok;
+    thead.appendChild(th);
+  });
+  table.appendChild(thead);
+
+  // Data rows
+  matrix.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    const label = document.createElement('th');
+    label.className = 'row-label';
+    label.textContent = tokens[i];
+    tr.appendChild(label);
+
+    row.forEach((val, j) => {
+      const td = document.createElement('td');
+      if (i === selectedRow) td.classList.add('highlighted');
+      const inner = document.createElement('div');
+      inner.className = 'cell-inner';
+      inner.style.background = weightToColor(val);
+      inner.style.color = textColor(val);
+      inner.textContent = val.toFixed(3);
+      td.appendChild(inner);
+
+      td.addEventListener('mouseenter', (e) => showTooltip(e, tokens[i], tokens[j], val));
+      td.addEventListener('mouseleave', hideTooltip);
+      td.addEventListener('click', () => selectToken(i));
+      tr.appendChild(td);
+    });
+    table.appendChild(tr);
+  });
+}
+
+// Side panel attention list
+function buildAttentionList(rowIdx) {
+  const list = document.getElementById('attentionList');
+  list.innerHTML = '';
+
+  const row = matrix[rowIdx];
+  const maxVal = Math.max(...row);
+
+  const ranked = row
+    .map((v, i) => ({ i, v }))
+    .sort((a, b) => b.v - a.v);
+
+  ranked.forEach(({ i, v }, rank) => {
+    const div = document.createElement('div');
+    div.className = 'attn-row';
+
+    const isTop = rank === 0;
+    const isSelf = i === rowIdx;
+
+    const tokEl = document.createElement('div');
+    tokEl.className = 'attn-token' + (isSelf ? ' self' : isTop ? ' top' : '');
+    tokEl.textContent = `"${tokens[i]}"`;
+    div.appendChild(tokEl);
+
+    const barWrap = document.createElement('div');
+    barWrap.className = 'attn-bar-wrap';
+    const bar = document.createElement('div');
+    bar.className = 'attn-bar' + (isSelf ? ' self' : isTop ? ' top' : '');
+    bar.style.width = `${(v / maxVal) * 100}%`;
+    barWrap.appendChild(bar);
+    div.appendChild(barWrap);
+
+    const val = document.createElement('div');
+    val.className = 'attn-val';
+    val.textContent = v.toFixed(3);
+    div.appendChild(val);
+
+    list.appendChild(div);
+  });
+}
+
+function selectToken(idx) {
+  selectedRow = idx;
+  document.getElementById('selectedTokenLabel').textContent = `"${tokens[idx]}"`;
+  document.getElementById('heatmapLabel').textContent = `attending from "${tokens[idx]}"`;
+
+  document.querySelectorAll('.token-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+
+  buildHeatmap();
+  buildAttentionList(idx);
+}
+
+const tooltip = document.getElementById('tooltip');
+function showTooltip(e, fromTok, toTok, val) {
+  tooltip.style.display = 'block';
+  tooltip.innerHTML = `<strong>"${fromTok}"</strong> → <strong>"${toTok}"</strong><br>attention weight: <span style="color:#e8c06d">${val.toFixed(4)}</span>`;
+  moveTooltip(e);
+}
+function moveTooltip(e) {
+  tooltip.style.left = (e.clientX + 14) + 'px';
+  tooltip.style.top = (e.clientY - 10) + 'px';
+}
+function hideTooltip() { tooltip.style.display = 'none'; }
+document.addEventListener('mousemove', moveTooltip);
+
+// Init
+buildHeatmap();
+buildAttentionList(selectedRow);
+</script>
+</body>
+</html>
