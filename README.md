@@ -14,6 +14,8 @@ a 6-week intensive AI PM curriculum.
 | Project | Description | Live Demo |
 |---------|-------------|-----------|
 | P7 — Transformer Attention Visualizer | Scaled dot-product attention computed from scratch. Click any token to inspect its attention distribution. | [Live](https://souvikkai.github.io/souvik-ai-pm-portfolio/p7-attention-visualizer/) |
+| Day 7 — SFT Training Experiment | Tiny transformer fine-tuned on 10 AI PM Q&A pairs. Loss reduced 89% over 200 epochs. Same mechanism as ChatGPT SFT at 1/24,000th the scale. | [Notebook](day7-sft-experiment/) |
+| Day 5 — Inference Silicon Teardown | PM-level competitive analysis of 7 inference silicon companies — NVIDIA, Groq, Cerebras, SambaNova, d-Matrix, Tenstorrent, Tensordyne. | [Analysis](day5-silicon-teardown/) |
 
 *More projects shipping weekly.*
 
