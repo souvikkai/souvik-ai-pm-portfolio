@@ -8,4 +8,4 @@ Same SFT mechanism OpenAI used for ChatGPT — at 1/24,000th the scale.
 **Key observation:** Loss drops from 3.68 (random weights) to ~0.41 
 (learned patterns) — gradient descent working in real time.
 
-![Loss Curve](day7_loss_curve.png)
+![Loss Curve](SFT%20Training%20loss%20curve.png)
