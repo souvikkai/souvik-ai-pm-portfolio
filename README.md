@@ -17,7 +17,7 @@ a 6-week intensive AI PM curriculum.
 | Day 7 — SFT Training Experiment | Tiny transformer fine-tuned on 10 AI PM Q&A pairs. Loss reduced 89% over 200 epochs. Same mechanism as ChatGPT SFT at 1/24,000th the scale. | [Notebook](day7-sft-experiment/) |
 | Day 5 — Inference Silicon Teardown | PM-level competitive analysis of 7 inference silicon companies — NVIDIA, Groq, Cerebras, SambaNova, d-Matrix, Tenstorrent, Tensordyne. | [Analysis](day5-silicon-teardown/) |
 | Day 8 — MMLU Benchmark | Evaluated flan-t5-base across 5 MMLU subjects. Overall 32% vs GPT-4 86%. Math and ethics at random baseline — reveals what scale buys. | [Results](day8-mmlu-benchmark/) |
-
+| Day 9 — Inference Benchmark | Raw PyTorch vs vLLM on phi-2. vLLM delivers 5.5x throughput at 5 concurrent users. Cold start adds 1500ms — never scale to zero. | [Results](day9-inference-benchmark/) |
 *More projects shipping weekly.*
 
 ---
