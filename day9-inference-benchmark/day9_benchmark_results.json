@@ -1,0 +1,18 @@
+{
+  "model": "microsoft/phi-2",
+  "hardware": "NVIDIA T4 16GB",
+  "date": "April 2026",
+  "pytorch": {
+    "avg_tpot_ms": 34.4,
+    "avg_throughput_tps": 29.2,
+    "cold_start_ttft_ms": 1604.2,
+    "warm_ttft_ms": 39.0
+  },
+  "vllm": {
+    "avg_tpot_ms": 39.2,
+    "avg_throughput_tps": 32.5,
+    "concurrent_throughput_tps": 161.2,
+    "concurrent_improvement_x": 5.5
+  },
+  "key_finding": "vLLM 5.5x throughput advantage at 5 concurrent users. Single request performance similar. Cold start adds 1500ms."
+}
