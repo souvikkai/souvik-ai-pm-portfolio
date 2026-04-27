@@ -1,0 +1,33 @@
+{
+  "experiment": "Speculative Decoding",
+  "draft_model": "GPT-2 small (117M)",
+  "target_model": "GPT-2 large (774M)",
+  "hardware": "NVIDIA T4 16GB",
+  "date": "April 2026",
+  "baseline_tps": 30.2,
+  "results_by_temperature": {
+    "0.1": {
+      "avg_acceptance_rate": 0.531,
+      "avg_tokens_per_sec": 25.2,
+      "speedup_vs_baseline": 0.84
+    },
+    "0.5": {
+      "avg_acceptance_rate": 0.819,
+      "avg_tokens_per_sec": 42.3,
+      "speedup_vs_baseline": 1.4
+    },
+    "1.0": {
+      "avg_acceptance_rate": 0.64,
+      "avg_tokens_per_sec": 28.2,
+      "speedup_vs_baseline": 0.93
+    }
+  },
+  "key_findings": [
+    "Temperature 0.5 sweet spot: 81.9% acceptance, 1.40x speedup",
+    "Temperature 0.1 and 1.0 slower than baseline due to overhead at low acceptance",
+    "Structured revenue text: 100% acceptance at temp 0.5",
+    "Creative story text: 89% acceptance -- GPT-2 trained heavily on narrative",
+    "Technical AI text: lowest acceptance -- domain underrepresented in GPT-2 training",
+    "Same-family models critical -- GPT-2 pairing shows lower acceptance than Llama 3 8B vs 70B would"
+  ]
+}
