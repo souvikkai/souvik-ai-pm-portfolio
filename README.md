@@ -19,6 +19,7 @@ a 6-week intensive AI PM curriculum.
 | Day 8 — MMLU Benchmark | Evaluated flan-t5-base across 5 MMLU subjects. Overall 32% vs GPT-4 86%. Math and ethics at random baseline — reveals what scale buys. | [Results](day8-mmlu-benchmark/) |
 | Day 9 — Inference Benchmark | Raw PyTorch vs vLLM on phi-2. vLLM delivers 5.5x throughput at 5 concurrent users. Cold start adds 1500ms — never scale to zero. | [Results](day9-inference-benchmark/) |
 | Day 11 — Speculative Decoding | GPT-2 small vs large. Temperature 0.5 sweet spot: 81.9% acceptance, 1.40x speedup. Validates 70% acceptance threshold. Training distribution matters more than text type. | [Results](day11-speculative-decoding/) |
+| Product 3 — RAG Inference Optimizer | Upload any resume + paste any JD → retrieves relevant experience → benchmarks Claude Sonnet vs Llama 3.1 8B on Groq with Cohere reranking. LLM-as-judge quality scoring. 99% cost reduction at 92% quality. | [Live](https://rag-inference-optimizer.vercel.app/) |
 *More projects shipping weekly.*
 
 ---
