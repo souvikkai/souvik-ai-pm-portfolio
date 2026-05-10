@@ -21,7 +21,9 @@ a 6-week intensive AI PM curriculum.
 | Day 11 — Speculative Decoding | GPT-2 small vs large. Temperature 0.5 sweet spot: 81.9% acceptance, 1.40x speedup. Validates 70% acceptance threshold. Training distribution matters more than text type. | [Results](day11-speculative-decoding/) |
 | Product 3 — RAG Inference Optimizer | Upload any resume + paste any JD → retrieves relevant experience → benchmarks Claude Sonnet vs Llama 3.1 8B on Groq with Cohere reranking. LLM-as-judge quality scoring. 99% cost reduction at 92% quality. | [Live](https://rag-inference-optimizer.vercel.app/) |
 | Day 15 — Prompt Optimization | 5 strategies × 10 test cases, LLM-as-judge scored. Structured Output wins: $0.00585/call, 3.90/5 quality. Few-Shot costs 22% more for +0.2 quality points. Chain of Thought most expensive — zero advantage over Zero-Shot. All strategies score 2/5 on vague inputs: prompt engineering can't fix missing user context. | [Results](day15-prompt-optimization/) |
-| Day 17 | LLM-as-Judge Eval Pipeline | Haiku vs Llama 3.1 8B judged by Sonnet on faithfulness, relevance, specificity, utility. Llama 38x cheaper but fails faithfulness 60% of the time. | [day17-llm-judge-eval/](day17-llm-judge-eval/) |
+| Day 16 — Long Context Scaling Experiment | Cost scales linearly (71x from 1K→100K tokens); latency scales sublinearly (2.25x) due to Flash Attention. Never scale to zero — cold start adds ~1.3s. | [day16-long-context/](day16-long-context/) |
+| Day 17 — LLM-as-Judge Eval Pipeline | Haiku vs Llama 3.1 8B judged by Sonnet on faithfulness, relevance, specificity, utility. Llama 38x cheaper but fails faithfulness 60% of the time. | [day17-llm-judge-eval/](day17-llm-judge-eval/) |
+
 
 *More projects shipping weekly.*
 
