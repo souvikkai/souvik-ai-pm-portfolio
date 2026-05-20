@@ -79,14 +79,16 @@ Despite training a ~0.5B parameter model, QLoRA kept memory usage extremely low 
 
 ### 1. Lower Loss ≠ Better Outputs
 
-Training loss decreased successfully:
+Training loss decreased successfully after expanding the dataset to 20 examples:
 
 | Step | Loss |
 |---|---|
-| 1 | 5.92 |
-| 5 | 5.37 |
+| 1 | 5.65 |
+| 25 | 3.39 |
 
-However, generation quality was still weak because the dataset was extremely small.
+The larger dataset improved training stability and reduced loss significantly.
+
+However, semantic correctness still remained inconsistent during evaluation.
 
 The model learned:
 - domain vocabulary
@@ -184,14 +186,12 @@ The trained adapter is tiny compared to the full base model, making:
 - Tokenizer/template alignment is critical
 - Training loss alone is not a reliable product metric
 - Notebook reproducibility can become a real engineering problem
+- A lightweight automated evaluation pipeline was added to compare base-model vs fine-tuned outputs across multiple prompts using simple keyword-based scoring heuristics.
 
 ---
 
 ## Future Improvements
 
-- Larger curated dataset
-- Train/eval split
-- Proper evaluation harness
 - Latency benchmarking
 - LoRA vs RAG comparison
 - Adapter merging experiments
