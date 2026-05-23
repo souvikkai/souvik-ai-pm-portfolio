@@ -1,0 +1,21 @@
+prompt_id,category,model,accuracy,depth,conciseness,notes
+1,simple_factual,llama3.1_8b,5,3,5,Technically correct but limited systems nuance
+1,simple_factual,claude_sonnet,5,5,5,Strong systems framing and inference-specific context
+2,simple_factual,llama3.1_8b,4,4,5,Strong concise explanation but less architectural nuance
+2,simple_factual,claude_sonnet,5,5,5,Excellent abstraction and systems framing
+3,complex_reasoning,llama3.1_8b,4,4,4,Good structure and experimentation ideas but somewhat generic
+3,complex_reasoning,claude_sonnet,5,5,5,Strong PM reasoning with realistic retention diagnostics
+4,complex_reasoning,llama3.1_8b,3,3,4,Comprehensive but checklist-heavy and less operationally realistic
+4,complex_reasoning,claude_sonnet,5,5,5,Excellent enterprise governance and legal workflow understanding
+5,complex_reasoning,llama3.1_8b,4,4,5,Good conceptual diagnosis but less production-level nuance
+5,complex_reasoning,claude_sonnet,5,5,5,Excellent evaluation-production gap analysis and PM framing
+6,complex_reasoning,llama3.1_8b,3,3,3,Understands high-level tradeoffs but weak inference economics and deployment nuance
+6,complex_reasoning,claude_sonnet,5,5,5,Excellent infra economics and deployment lifecycle reasoning
+7,ai_infrastructure,llama3.1_8b,3,3,3,Understands memory hierarchy basics but lacks modern inference-serving precision
+7,ai_infrastructure,claude_sonnet,5,5,5,Excellent systems-level inference and memory hierarchy reasoning
+8,ai_infrastructure,llama3.1_8b,4,3,4,Good optimization overview but limited production-serving depth
+8,ai_infrastructure,claude_sonnet,5,5,5,Strong production inference optimization understanding
+9,ai_infrastructure,llama3.1_8b,3,3,3,Good architectural components but limited production RAG nuance
+9,ai_infrastructure,claude_sonnet,5,5,5,Excellent production-grade RAG systems reasoning
+10,ai_infrastructure,llama3.1_8b,3,3,4,Reasonable architecture overview but limited modern packaging and ecosystem nuance
+10,ai_infrastructure,claude_sonnet,5,5,4,Strong semiconductor and AI systems reasoning with slightly verbose delivery

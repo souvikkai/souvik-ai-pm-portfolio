@@ -1,0 +1,72 @@
+[
+    {
+      "prompt_id": 1,
+      "category": "simple_factual",
+      "prompt": "What is the difference between latency and throughput in distributed systems?",
+      "response": "Latency measures the time required to complete a single operation, while throughput measures the number of operations completed per unit time. In LLM serving, TTFT is a latency metric, whereas tokens/sec across concurrent users is a throughput metric.",
+      "latency_seconds": 5
+    },
+    {
+      "prompt_id": 2,
+      "category": "simple_factual",
+      "prompt": "Explain what a transformer model is in under 100 words.",
+      "response": "A transformer is a neural network architecture built on self-attention. Every token attends to every other token simultaneously, enabling efficient parallel processing and strong long-range dependency modeling. Transformers underpin modern LLMs and multimodal systems.",
+      "latency_seconds": 4
+    },
+    {
+      "prompt_id": 3,
+      "category": "complex_reasoning",
+      "prompt": "A chatbot has high user engagement but low Day-7 retention. Propose three root-cause hypotheses and how you would validate each experimentally.",
+      "response": "Potential causes include novelty-driven engagement, unmet production expectations, and missing habit loops. Validate through cohort analysis, retention experiments, and JTBD interviews.",
+      "latency_seconds": 8
+    },
+    {
+      "prompt_id": 4,
+      "category": "complex_reasoning",
+      "prompt": "Design an evaluation framework for an AI summarization product used by enterprise legal teams.",
+      "response": "Evaluation should measure factual consistency, omission risk, legal entity correctness, trust calibration, latency, and governance workflows with human review.",
+      "latency_seconds": 10
+    },
+    {
+      "prompt_id": 5,
+      "category": "complex_reasoning",
+      "prompt": "An LLM product has excellent benchmark scores but poor customer satisfaction. Explain why this can happen and how you would diagnose the issue.",
+      "response": "Benchmarks rarely capture real-world workflows, latency expectations, formatting needs, and enterprise edge cases. Diagnose with production-query evals, CSAT instrumentation, and failure-mode analysis.",
+      "latency_seconds": 7
+    },
+    {
+      "prompt_id": 6,
+      "category": "complex_reasoning",
+      "prompt": "Compare API-based inference vs self-hosted inference for a startup serving 5 million daily requests.",
+      "response": "API inference optimizes speed-to-market and operational simplicity, while self-hosted inference improves economics and workload specialization at scale. Hybrid architectures often emerge as the long-term equilibrium.",
+      "latency_seconds": 9
+    },
+    {
+      "prompt_id": 7,
+      "category": "ai_infrastructure",
+      "prompt": "Explain how HBM bandwidth, SRAM cache locality, and KV-cache design impact LLM inference latency.",
+      "response": "LLM inference is largely memory-bandwidth bound. HBM bandwidth governs weight movement speed, SRAM locality reduces expensive HBM accesses, and KV-cache efficiency determines autoregressive decoding performance.",
+      "latency_seconds": 12
+    },
+    {
+      "prompt_id": 8,
+      "category": "ai_infrastructure",
+      "prompt": "Compare quantization, speculative decoding, batching, and tensor parallelism as inference optimization techniques.",
+      "response": "Quantization reduces memory footprint, speculative decoding lowers latency through draft-model acceleration, batching improves throughput, and tensor parallelism distributes large models across GPUs.",
+      "latency_seconds": 8
+    },
+    {
+      "prompt_id": 9,
+      "category": "ai_infrastructure",
+      "prompt": "Design a production-grade RAG pipeline for enterprise documents with requirements for freshness, hallucination mitigation, and low latency.",
+      "response": "A production RAG pipeline should combine hybrid retrieval, reranking, freshness-aware indexing, semantic caching, observability, and grounded citation verification.",
+      "latency_seconds": 11
+    },
+    {
+      "prompt_id": 10,
+      "category": "ai_infrastructure",
+      "prompt": "Compare monolithic GPU architectures vs chiplet-based accelerator architectures for large-scale AI training systems.",
+      "response": "Monolithic GPUs simplify intra-chip communication and software optimization, while chiplet architectures improve yield, modular scaling, and packaging flexibility at the cost of interconnect complexity.",
+      "latency_seconds": 10
+    }
+  ]

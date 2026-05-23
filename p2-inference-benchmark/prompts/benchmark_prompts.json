@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "category": "simple_factual",
+    "prompt": "What is the difference between latency and throughput in distributed systems?"
+  },
+  {
+    "id": 2,
+    "category": "complex_reasoning",
+    "prompt": "Compare API-based inference vs self-hosted inference for a startup serving 5 million daily requests."
+  },
+  {
+    "id": 3,
+    "category": "ai_infrastructure",
+    "prompt": "Explain how KV-cache design impacts LLM inference latency."
+  }
+]

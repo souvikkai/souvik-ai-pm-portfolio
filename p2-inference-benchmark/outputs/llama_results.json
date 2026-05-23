@@ -1,0 +1,72 @@
+[
+    {
+      "prompt_id": 1,
+      "category": "simple_factual",
+      "prompt": "What is the difference between latency and throughput in distributed systems?",
+      "response": "In distributed systems, latency is the time taken for a single request to complete, while throughput is the amount of work completed per unit time.",
+      "latency_seconds": 15.614
+    },
+    {
+      "prompt_id": 2,
+      "category": "simple_factual",
+      "prompt": "Explain what a transformer model is in under 100 words.",
+      "response": "A Transformer model is a neural network architecture using self-attention mechanisms to process sequential data efficiently in parallel. It underpins modern LLMs and NLP systems.",
+      "latency_seconds": 6.861
+    },
+    {
+      "prompt_id": 3,
+      "category": "complex_reasoning",
+      "prompt": "A chatbot has high user engagement but low Day-7 retention. Propose three root-cause hypotheses and how you would validate each experimentally.",
+      "response": "Potential causes include lack of recurring value, weak onboarding, and low-quality engagement. These can be tested using cohort analysis and A/B experiments.",
+      "latency_seconds": 25.616
+    },
+    {
+      "prompt_id": 4,
+      "category": "complex_reasoning",
+      "prompt": "Design an evaluation framework for an AI summarization product used by enterprise legal teams.",
+      "response": "The framework should measure factual accuracy, completeness, readability, latency, and compliance. Human review and weighted scoring should be included.",
+      "latency_seconds": 41.165
+    },
+    {
+      "prompt_id": 5,
+      "category": "complex_reasoning",
+      "prompt": "An LLM product has excellent benchmark scores but poor customer satisfaction. Explain why this can happen and how you would diagnose the issue.",
+      "response": "Benchmarks may not reflect real-world workflows. Diagnose using customer feedback, failure analysis, and production query evaluation.",
+      "latency_seconds": 29.867
+    },
+    {
+      "prompt_id": 6,
+      "category": "complex_reasoning",
+      "prompt": "Compare API-based inference vs self-hosted inference for a startup serving 5 million daily requests.",
+      "response": "API inference offers rapid scaling and low ops burden, while self-hosted inference improves control and long-term cost efficiency at scale.",
+      "latency_seconds": 38.837
+    },
+    {
+      "prompt_id": 7,
+      "category": "ai_infrastructure",
+      "prompt": "Explain how HBM bandwidth, SRAM cache locality, and KV-cache design impact LLM inference latency.",
+      "response": "HBM bandwidth, SRAM locality, and KV-cache efficiency directly affect memory movement and inference latency in LLM systems.",
+      "latency_seconds": 51.925
+    },
+    {
+      "prompt_id": 8,
+      "category": "ai_infrastructure",
+      "prompt": "Compare quantization, speculative decoding, batching, and tensor parallelism as inference optimization techniques.",
+      "response": "Quantization reduces memory usage, batching improves throughput, speculative decoding lowers latency, and tensor parallelism distributes computation across GPUs.",
+      "latency_seconds": 31.948
+    },
+    {
+      "prompt_id": 9,
+      "category": "ai_infrastructure",
+      "prompt": "Design a production-grade RAG pipeline for enterprise documents with requirements for freshness, hallucination mitigation, and low latency.",
+      "response": "A production RAG system requires hybrid retrieval, caching, reranking, freshness-aware indexing, and hallucination mitigation through grounded citations.",
+      "latency_seconds": 51.2
+    },
+    {
+      "prompt_id": 10,
+      "category": "ai_infrastructure",
+      "prompt": "Compare monolithic GPU architectures vs chiplet-based accelerator architectures for large-scale AI training systems.",
+      "response": "Monolithic GPUs simplify communication and programming, while chiplet architectures improve yield, modularity, and scalability at the cost of interconnect complexity.",
+      "latency_seconds": 42.576
+    }
+  ]
